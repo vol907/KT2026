@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klassentreffen 04.07.2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+  :root{--bg:#f7f5f0;--surface:#fff;--border:#e0dcd4;--text:#1a1a1a;--muted:#888;--accent:#b8860b;--green:#2d7a4f;--red:#b04040;--orange:#c07020;--blue:#3060a0;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:14px;}
+  header{background:var(--surface);border-bottom:2px solid var(--accent);padding:18px 32px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  header h1{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;letter-spacing:0.04em;}
+  .lang-switcher{margin-left:auto;display:flex;gap:6px;align-items:center;}
+  .lang-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:4px 10px;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11px;cursor:pointer;transition:all .15s;}
+  .lang-btn.active,.lang-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .upd{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
+  .main{padding:24px 32px;max-width:1100px;}
+  .stats{display:flex;gap:14px;margin-bottom:22px;flex-wrap:wrap;}
+  .stat{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 16px;min-width:110px;}
+  .stat-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
+  .stat-value{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:500;}
+  .sv-green{color:var(--green)}.sv-red{color:var(--red)}.sv-blue{color:var(--blue)}.sv-accent{color:var(--accent)}
+  .filters{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+  .filters select,.filters input{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:7px 11px;border-radius:4px;font-family:'IBM Plex Sans',sans-serif;font-size:13px;outline:none;}
+  .filters input{width:190px;}
+  .count{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:8px;}
+  .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:6px;overflow:auto;}
+  table{width:100%;border-collapse:collapse;}
+  thead tr{background:#f0ece4;}
+  th{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:10px 14px;text-align:left;white-space:nowrap;}
+  td{padding:9px 14px;border-bottom:1px solid var(--border);}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:#faf8f4;}
+  .name{font-weight:500;}
+  .mono-sm{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);text-align:center;}
+  .t-yes{color:var(--green);font-weight:500;}
+  .t-no{color:var(--red);}
+  .t-maybe{color:var(--orange);}
+  .t-unknown{color:var(--muted);}
+  .st-full{background:#e6f4ed;color:var(--green);padding:2px 8px;border-radius:3px;font-size:12px;font-weight:500;}
+  .st-partial{background:#e6eef8;color:var(--blue);padding:2px 8px;border-radius:3px;font-size:12px;}
+  .st-none{background:#fceaea;color:var(--red);padding:2px 8px;border-radius:3px;font-size:12px;}
+  .hidden{display:none;}
+  footer{padding:18px 32px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:28px;}
+</style>
+</head>
+<body>
+<header>
+  <h1>Klassentreffen 04.07.2026</h1>
+  <span class="upd" id="updLabel"></span>
+  <div class="lang-switcher">
+    <button class="lang-btn" onclick="setLang('es')">ES</button>
+    <button class="lang-btn" onclick="setLang('de')">DE</button>
+    <button class="lang-btn" onclick="setLang('ca')">CA</button>
+  </div>
+</header>
+<div class="main">
+  <div class="stats">
+    <div class="stat"><div class="stat-label" data-i18n="stat_confirmed"></div><div class="stat-value sv-accent">47</div></div>
+    <div class="stat"><div class="stat-label" data-i18n="stat_full"></div><div class="stat-value sv-green">0</div></div>
+    <div class="stat"><div class="stat-label" data-i18n="stat_partial"></div><div class="stat-value sv-blue">5</div></div>
+    <div class="stat"><div class="stat-label" data-i18n="stat_pending"></div><div class="stat-value sv-red">42</div></div>
+    <div class="stat"><div class="stat-label" data-i18n="stat_total"></div><div class="stat-value">125</div></div>
+  </div>
+  <div class="filters">
+    <input type="text" id="s" data-i18n-ph="search_ph" oninput="applyFilter()">
+    <select id="ft" onchange="applyFilter()">
+      <option value="all" data-i18n="f_all_part"></option>
+      <option value="1"   data-i18n="status_yes"></option>
+      <option value="0"   data-i18n="status_no"></option>
+      <option value="?"   data-i18n="status_maybe"></option>
+      <option value="null" data-i18n="status_unknown"></option>
+    </select>
+    <select id="fk" onchange="applyFilter()">
+      <option value="all" data-i18n="f_all_class"></option>
+      <option value="12ma">12ma</option>
+      <option value="12mb">12mb</option>
+      <option value="12mc">12mc</option>
+      <option value="12sa">12sa</option>
+      <option value="12sb">12sb</option>
+      <option value="" data-i18n="f_noclass"></option>
+    </select>
+    <select id="fz" onchange="applyFilter()">
+      <option value="all"     data-i18n="f_all_pay"></option>
+      <option value="full"    data-i18n="pay_full"></option>
+      <option value="partial" data-i18n="pay_partial"></option>
+      <option value="none"    data-i18n="pay_none"></option>
+    </select>
+  </div>
+  <div class="count" id="cnt"></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th data-i18n="col_name"></th>
+        <th data-i18n="col_class"></th>
+        <th data-i18n="col_attendance"></th>
+        <th data-i18n="col_p1"></th>
+        <th data-i18n="col_p2"></th>
+        <th data-i18n="col_status"></th>
+      </tr></thead>
+      <tbody id="tb"><tr data-teilnahme="0" data-clase="12ma" data-status="none">
+      <td class="name">José Jesús A.</td>
+      <td>12ma</td>
+      <td><span class="t-no" data-i18n="status_no"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12ma" data-status="none">
+      <td class="name">Marcos A.</td>
+      <td>12ma</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12ma" data-status="none">
+      <td class="name">Guido B.</td>
+      <td>12ma</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="0" data-clase="12ma" data-status="none">
+      <td class="name">Oriol B.</td>
+      <td>12ma</td>
+      <td><span class="t-no" data-i18n="status_no"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12ma" data-status="none">
+      <td class="name">Torsten D.</td>
+      <td>12ma</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12ma" data-status="none">
+      <td class="name">Bernd E.</td>
+      <td>12ma</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12ma" data-status="none">
+      <td class="name">Frank G.</td>
+      <td>12ma</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12ma" data-status="none">
+      <td class="name">Carlos G.</td>
+      <td>12ma</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12ma" data-status="none">
+      <td class="name">Guillermo L.</td>
+      <td>12ma</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12ma" data-status="none">
+      <td class="name">Danel L.</td>
+      <td>12ma</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12ma" data-status="none">
+      <td class="name">Joaquín M.</td>
+      <td>12ma</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12ma" data-status="none">
+      <td class="name">Juan-Adrián M.</td>
+      <td>12ma</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12ma" data-status="none">
+      <td class="name">Miguel Angel M.</td>
+      <td>12ma</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12ma" data-status="none">
+      <td class="name">Alvaro M.</td>
+      <td>12ma</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12ma" data-status="none">
+      <td class="name">José Miguel M.</td>
+      <td>12ma</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12ma" data-status="none">
+      <td class="name">Javier M.</td>
+      <td>12ma</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12ma" data-status="none">
+      <td class="name">Karl-Michael N.</td>
+      <td>12ma</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12ma" data-status="none">
+      <td class="name">Norbert P.</td>
+      <td>12ma</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12ma" data-status="partial">
+      <td class="name">Iván P.</td>
+      <td>12ma</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">07/04/2026</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-partial" data-i18n="pay_partial"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12ma" data-status="none">
+      <td class="name">Jordi Q.</td>
+      <td>12ma</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="0" data-clase="12ma" data-status="none">
+      <td class="name">Óscar R.</td>
+      <td>12ma</td>
+      <td><span class="t-no" data-i18n="status_no"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12ma" data-status="none">
+      <td class="name">Francisco Javier V.</td>
+      <td>12ma</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12ma" data-status="none">
+      <td class="name">Álvaro V.</td>
+      <td>12ma</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mb" data-status="none">
+      <td class="name">Emilio C.</td>
+      <td>12mb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mb" data-status="none">
+      <td class="name">Raimund C.</td>
+      <td>12mb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mb" data-status="none">
+      <td class="name">Horst F.</td>
+      <td>12mb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mb" data-status="none">
+      <td class="name">Stella Y.</td>
+      <td>12mb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="?" data-clase="12mb" data-status="none">
+      <td class="name">Óscar G.</td>
+      <td>12mb</td>
+      <td><span class="t-maybe" data-i18n="status_maybe"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12mb" data-status="none">
+      <td class="name">Jürgen G.</td>
+      <td>12mb</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mb" data-status="none">
+      <td class="name">Christine G.</td>
+      <td>12mb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mb" data-status="none">
+      <td class="name">Bettina H.</td>
+      <td>12mb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="0" data-clase="12mb" data-status="none">
+      <td class="name">Markus J.</td>
+      <td>12mb</td>
+      <td><span class="t-no" data-i18n="status_no"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mb" data-status="none">
+      <td class="name">Karl-Heinz K.</td>
+      <td>12mb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mb" data-status="none">
+      <td class="name">Manuel M.</td>
+      <td>12mb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mb" data-status="none">
+      <td class="name">Daniel M.</td>
+      <td>12mb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mb" data-status="none">
+      <td class="name">Christian N.</td>
+      <td>12mb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mb" data-status="none">
+      <td class="name">Carlos O.</td>
+      <td>12mb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12mb" data-status="none">
+      <td class="name">Christina P.</td>
+      <td>12mb</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mb" data-status="none">
+      <td class="name">Eckhard P.</td>
+      <td>12mb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mb" data-status="none">
+      <td class="name">Juliana S.</td>
+      <td>12mb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12mb" data-status="none">
+      <td class="name">Patricia S.</td>
+      <td>12mb</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="?" data-clase="12mb" data-status="none">
+      <td class="name">Hans Paul S.</td>
+      <td>12mb</td>
+      <td><span class="t-maybe" data-i18n="status_maybe"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="?" data-clase="12mb" data-status="none">
+      <td class="name">Francisco S.</td>
+      <td>12mb</td>
+      <td><span class="t-maybe" data-i18n="status_maybe"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mb" data-status="none">
+      <td class="name">Oliver T.</td>
+      <td>12mb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mb" data-status="none">
+      <td class="name">Dieter W.</td>
+      <td>12mb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12mc" data-status="none">
+      <td class="name">Peter A.</td>
+      <td>12mc</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12mc" data-status="none">
+      <td class="name">Thomas A.</td>
+      <td>12mc</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12mc" data-status="none">
+      <td class="name">Hans-Hermann B.</td>
+      <td>12mc</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="?" data-clase="12mc" data-status="none">
+      <td class="name">Marta B.</td>
+      <td>12mc</td>
+      <td><span class="t-maybe" data-i18n="status_maybe"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12mc" data-status="partial">
+      <td class="name">Jordi B.</td>
+      <td>12mc</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">07/04/2026</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-partial" data-i18n="pay_partial"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12mc" data-status="partial">
+      <td class="name">David C.</td>
+      <td>12mc</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">07/04/2026</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-partial" data-i18n="pay_partial"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mc" data-status="none">
+      <td class="name">Thomas C.</td>
+      <td>12mc</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12mc" data-status="none">
+      <td class="name">Víctor E.</td>
+      <td>12mc</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12mc" data-status="none">
+      <td class="name">Kay Eduardo G.</td>
+      <td>12mc</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="0" data-clase="12mc" data-status="none">
+      <td class="name">Peter J.</td>
+      <td>12mc</td>
+      <td><span class="t-no" data-i18n="status_no"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="0" data-clase="12mc" data-status="none">
+      <td class="name">Félix K.</td>
+      <td>12mc</td>
+      <td><span class="t-no" data-i18n="status_no"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mc" data-status="none">
+      <td class="name">Thorsten M.</td>
+      <td>12mc</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12mc" data-status="none">
+      <td class="name">María del Carmen P.</td>
+      <td>12mc</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mc" data-status="none">
+      <td class="name">Sonia T.</td>
+      <td>12mc</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="?" data-clase="12mc" data-status="none">
+      <td class="name">Christian T.</td>
+      <td>12mc</td>
+      <td><span class="t-maybe" data-i18n="status_maybe"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="0" data-clase="12mc" data-status="none">
+      <td class="name">César V.</td>
+      <td>12mc</td>
+      <td><span class="t-no" data-i18n="status_no"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12mc" data-status="none">
+      <td class="name">Markus Z.</td>
+      <td>12mc</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12sa" data-status="none">
+      <td class="name">Peter B.</td>
+      <td>12sa</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12sa" data-status="none">
+      <td class="name">Patricia B.</td>
+      <td>12sa</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12sa" data-status="none">
+      <td class="name">Eva F.</td>
+      <td>12sa</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="?" data-clase="12sa" data-status="none">
+      <td class="name">Yolanda G.</td>
+      <td>12sa</td>
+      <td><span class="t-maybe" data-i18n="status_maybe"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12sa" data-status="none">
+      <td class="name">Marion H.</td>
+      <td>12sa</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="?" data-clase="12sa" data-status="none">
+      <td class="name">Ingrid K.</td>
+      <td>12sa</td>
+      <td><span class="t-maybe" data-i18n="status_maybe"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12sa" data-status="none">
+      <td class="name">José Ricardo M.</td>
+      <td>12sa</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="?" data-clase="12sa" data-status="none">
+      <td class="name">Marga M.</td>
+      <td>12sa</td>
+      <td><span class="t-maybe" data-i18n="status_maybe"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12sa" data-status="none">
+      <td class="name">Annette M.</td>
+      <td>12sa</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12sa" data-status="none">
+      <td class="name">Ralf M.</td>
+      <td>12sa</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="0" data-clase="12sa" data-status="none">
+      <td class="name">Juan José P.</td>
+      <td>12sa</td>
+      <td><span class="t-no" data-i18n="status_no"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12sa" data-status="none">
+      <td class="name">Carlota R.</td>
+      <td>12sa</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12sa" data-status="none">
+      <td class="name">Monica T.</td>
+      <td>12sa</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12sa" data-status="none">
+      <td class="name">Mónica T.</td>
+      <td>12sa</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12sb" data-status="none">
+      <td class="name">Kristina B.</td>
+      <td>12sb</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12sb" data-status="none">
+      <td class="name">Oliver B.</td>
+      <td>12sb</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12sb" data-status="none">
+      <td class="name">Andrea F.</td>
+      <td>12sb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12sb" data-status="none">
+      <td class="name">Claudia G.</td>
+      <td>12sb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12sb" data-status="none">
+      <td class="name">Stefan G.</td>
+      <td>12sb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12sb" data-status="none">
+      <td class="name">Constanze G.</td>
+      <td>12sb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12sb" data-status="none">
+      <td class="name">Maya-Ines H.</td>
+      <td>12sb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12sb" data-status="none">
+      <td class="name">Johanna J.</td>
+      <td>12sb</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12sb" data-status="none">
+      <td class="name">Heidrun L.</td>
+      <td>12sb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12sb" data-status="none">
+      <td class="name">Ina M.</td>
+      <td>12sb</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="?" data-clase="12sb" data-status="none">
+      <td class="name">Pilar M.</td>
+      <td>12sb</td>
+      <td><span class="t-maybe" data-i18n="status_maybe"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12sb" data-status="none">
+      <td class="name">Francisca N.</td>
+      <td>12sb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12sb" data-status="none">
+      <td class="name">Boris O.</td>
+      <td>12sb</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12sb" data-status="none">
+      <td class="name">Birgit R.</td>
+      <td>12sb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="12sb" data-status="none">
+      <td class="name">Kai S.</td>
+      <td>12sb</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="?" data-clase="12sb" data-status="none">
+      <td class="name">Susanne S.</td>
+      <td>12sb</td>
+      <td><span class="t-maybe" data-i18n="status_maybe"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="12sb" data-status="none">
+      <td class="name">Urs T.</td>
+      <td>12sb</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="?" data-clase="12sb" data-status="none">
+      <td class="name">Susana V.</td>
+      <td>12sb</td>
+      <td><span class="t-maybe" data-i18n="status_maybe"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="0" data-clase="12sb" data-status="none">
+      <td class="name">Susanne W.</td>
+      <td>12sb</td>
+      <td><span class="t-no" data-i18n="status_no"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="" data-status="none">
+      <td class="name">Carlos A.</td>
+      <td>—</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="" data-status="partial">
+      <td class="name">Cristina C.</td>
+      <td>—</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">07/04/2026</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-partial" data-i18n="pay_partial"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="" data-status="none">
+      <td class="name">Alexandra H.</td>
+      <td>—</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="" data-status="none">
+      <td class="name">Jaime Y.</td>
+      <td>—</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="0" data-clase="" data-status="none">
+      <td class="name">Marcel F.</td>
+      <td>—</td>
+      <td><span class="t-no" data-i18n="status_no"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="0" data-clase="" data-status="none">
+      <td class="name">Berni Rudolf B.</td>
+      <td>—</td>
+      <td><span class="t-no" data-i18n="status_no"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="" data-status="none">
+      <td class="name">Marcus D.</td>
+      <td>—</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="?" data-clase="" data-status="none">
+      <td class="name">Katinka Y.</td>
+      <td>—</td>
+      <td><span class="t-maybe" data-i18n="status_maybe"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="" data-status="none">
+      <td class="name">Cristina P.</td>
+      <td>—</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="" data-status="none">
+      <td class="name">Esther R.</td>
+      <td>—</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="" data-status="none">
+      <td class="name">Irene W.</td>
+      <td>—</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="" data-status="none">
+      <td class="name">Melina M.</td>
+      <td>—</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="" data-status="partial">
+      <td class="name">Javier M.</td>
+      <td>—</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">07/04/2026</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-partial" data-i18n="pay_partial"></span></td>
+    </tr><tr data-teilnahme="0" data-clase="" data-status="none">
+      <td class="name">Inge M.</td>
+      <td>—</td>
+      <td><span class="t-no" data-i18n="status_no"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="0" data-clase="" data-status="none">
+      <td class="name">Gonzalo D.</td>
+      <td>—</td>
+      <td><span class="t-no" data-i18n="status_no"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="" data-status="none">
+      <td class="name">Albert H.</td>
+      <td>—</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="0" data-clase="" data-status="none">
+      <td class="name">Jordi K.</td>
+      <td>—</td>
+      <td><span class="t-no" data-i18n="status_no"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="" data-status="none">
+      <td class="name">Willy K.</td>
+      <td>—</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="?" data-clase="" data-status="none">
+      <td class="name">Eduardo E.</td>
+      <td>—</td>
+      <td><span class="t-maybe" data-i18n="status_maybe"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="0" data-clase="" data-status="none">
+      <td class="name">Gerhard D.</td>
+      <td>—</td>
+      <td><span class="t-no" data-i18n="status_no"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="" data-status="none">
+      <td class="name">Hermann M.</td>
+      <td>—</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="" data-status="none">
+      <td class="name">Markus M.</td>
+      <td>—</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="" data-status="none">
+      <td class="name">Astrid F.</td>
+      <td>—</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="" data-status="none">
+      <td class="name">Gerhard B.</td>
+      <td>—</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="" data-status="none">
+      <td class="name">Enrique B.</td>
+      <td>—</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="" data-status="none">
+      <td class="name">Markus U.</td>
+      <td>—</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="" data-status="none">
+      <td class="name">Gisela C.</td>
+      <td>—</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="1" data-clase="" data-status="none">
+      <td class="name">Eva María J.</td>
+      <td>—</td>
+      <td><span class="t-yes" data-i18n="status_yes"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="0" data-clase="" data-status="none">
+      <td class="name">Stefanie M.</td>
+      <td>—</td>
+      <td><span class="t-no" data-i18n="status_no"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr><tr data-teilnahme="null" data-clase="" data-status="none">
+      <td class="name">Barbara R.</td>
+      <td>—</td>
+      <td><span class="t-unknown" data-i18n="status_unknown"></span></td>
+      <td class="mono-sm">—</td>
+      <td class="mono-sm">—</td>
+      <td><span class="st-none" data-i18n="pay_none"></span></td>
+    </tr></tbody>
+    </table>
+  </div>
+</div>
+<footer data-i18n="footer_note"></footer>
+<script>
+const I18N={
+  es:{upd:'Actualizado:',stat_confirmed:'Confirmados',stat_full:'Pago completo',stat_partial:'Pago parcial',stat_pending:'Pendiente',stat_total:'Total personas',search_ph:'Buscar nombre…',f_all_part:'Todos los estados',f_all_class:'Todas las clases',f_all_pay:'Todos los pagos',f_noclass:'Sin clase',status_yes:'Confirmado',status_no:'Cancelado',status_maybe:'Dudoso',status_unknown:'Sin respuesta',pay_full:'Completo',pay_partial:'Parcial',pay_none:'Pendiente',col_name:'Nombre',col_class:'Clase',col_attendance:'Asistencia',col_p1:'Pago 1',col_p2:'Pago 2',col_status:'Estado',cnt_persons:'personas',footer_note:'Klassentreffen 04.07.2026 · Generado automáticamente · Solo informativo'},
+  de:{upd:'Stand:',stat_confirmed:'Bestätigt',stat_full:'Vollständig',stat_partial:'Teilzahlung',stat_pending:'Ausstehend',stat_total:'Personen gesamt',search_ph:'Name suchen…',f_all_part:'Alle Teilnahmestatus',f_all_class:'Alle Klassen',f_all_pay:'Alle Zahlungsstatus',f_noclass:'Keine Klasse',status_yes:'Bestätigt',status_no:'Abgesagt',status_maybe:'Unsicher',status_unknown:'Keine Antwort',pay_full:'Vollständig',pay_partial:'Teilzahlung',pay_none:'Ausstehend',col_name:'Name',col_class:'Klasse',col_attendance:'Teilnahme',col_p1:'Zahlung 1',col_p2:'Zahlung 2',col_status:'Status',cnt_persons:'Personen',footer_note:'Klassentreffen 04.07.2026 · Automatisch generiert · Nur zur Information'},
+  ca:{upd:'Actualitzat:',stat_confirmed:'Confirmats',stat_full:'Pagament complet',stat_partial:'Pagament parcial',stat_pending:'Pendent',stat_total:'Total persones',search_ph:'Cercar nom…',f_all_part:'Tots els estats',f_all_class:'Totes les classes',f_all_pay:'Tots els pagaments',f_noclass:'Sense classe',status_yes:'Confirmat',status_no:'Cancel·lat',status_maybe:'Dubtós',status_unknown:'Sense resposta',pay_full:'Complet',pay_partial:'Parcial',pay_none:'Pendent',col_name:'Nom',col_class:'Classe',col_attendance:'Assistència',col_p1:'Pagament 1',col_p2:'Pagament 2',col_status:'Estat',cnt_persons:'persones',footer_note:'Klassentreffen 04.07.2026 · Generat automàticament · Només informatiu'}
+};
+const DATE_STR='07.04.2026';
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();}
+function setLang(lang){
+  const t=I18N[lang];
+  document.documentElement.lang=lang;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(t[k]!==undefined)el.textContent=t[k];});
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{const k=el.dataset.i18nPh||el.getAttribute('data-i18n-ph');if(t[k]!==undefined)el.placeholder=t[k];});
+  document.getElementById('updLabel').textContent=t.upd+' '+DATE_STR;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent===lang.toUpperCase()));
+  applyFilter();
+}
+function applyFilter(){
+  const t=I18N[document.documentElement.lang]||I18N.es;
+  const s=norm(document.getElementById('s').value);
+  const ft=document.getElementById('ft').value;
+  const fk=document.getElementById('fk').value;
+  const fz=document.getElementById('fz').value;
+  let c=0;
+  document.querySelectorAll('#tb tr').forEach(tr=>{
+    const name=norm(tr.querySelector('.name')?.textContent||'');
+    const show=(s===''||name.includes(s))&&(ft==='all'||String(tr.dataset.teilnahme)===ft)&&(fk==='all'||tr.dataset.clase===fk)&&(fz==='all'||tr.dataset.status===fz);
+    tr.classList.toggle('hidden',!show);
+    if(show)c++;
+  });
+  document.getElementById('cnt').textContent=c+' '+t.cnt_persons;
+}
+setLang('es');
+</script>
+</body>
+</html>
